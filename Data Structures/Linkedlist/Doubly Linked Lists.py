@@ -1,12 +1,12 @@
-# 10 -> 20->30
-
 class Node:
     def __init__(self,data):
         self.data = data
         self.next = None
-class LinkedList:
+        self.previous = None
+
+class doubleLinkedList():
     def __init__(self,data):
-        self.head = Node(data)
+        self.head = None
         self.tail = self.head
         self.length = 0
     def print_list(self):
@@ -18,7 +18,6 @@ class LinkedList:
                 print(current_node.data, end= ' ')
                 current_node = current_node.next
         print()
-
     # O(1)
     def append(self,data):
         node = Node(data)
@@ -28,6 +27,7 @@ class LinkedList:
             self.length = 1
         else:
             self.tail.next = node
+            node.previous = self.tail
             self.tail = node
             self.length += 1
         return self.print_list()
@@ -41,6 +41,7 @@ class LinkedList:
         else:
             current_node = self.head
             node.next = current_node
+            current_node.previous = node
             self.head = node
             self.length += 1
         return self.print_list()
@@ -59,17 +60,20 @@ class LinkedList:
             for i in range(position-1): # find the node before target position
                 current_node = current_node.next
             node.next = current_node.next
+            node.previous = current_node
             current_node.next = node
+            node.next.previous = current_node
             self.length +=1
             return self.print_list()
     def remove_by_index(self, position):
         if position > self.length:
-            
             return 
         if position == 0:
             self.head = self.head.next  
             if self.head is None or self.head.next is None:
                 self.head = self.tail 
+            if self.head != None:
+                self.head.previous = None
         else:
             current_node = self.head
 
@@ -78,9 +82,13 @@ class LinkedList:
 
             current_node.next = current_node.next.next
         self.length -=1
+        if current_node.next != None:
+                current_node.next.previous = current_node
 
         if current_node.next is None:
             self.tail = current_node
+        if self.head != None:
+            self.head.previous = None
         return self.print_list()
     
     def remove_by_value(self, data):
@@ -94,13 +102,15 @@ class LinkedList:
                 self.length -= 1
 
         #fing the node before target value and the node should not be last node
-        while current_node.next!=None and current_node.next.data!= data:
+        while current_node.next !=None and current_node.next.data!= data:
             current_node = current_node.next
 
         if current_node.next !=None :
             current_node.next = current_node.next.next
             if current_node.next==None:
                 self.tail = current_node
+            else:
+                current_node.next.previous = current_node #Then we set the previous of the node next to the deleted node equal to the current node, so a two-way link is established
             self.length -= 1
         else: 
             print("Given value not found.")
@@ -111,7 +121,7 @@ class LinkedList:
 
 
 
-myLinkedList = LinkedList(10)
+myLinkedList = doubleLinkedList(10)
 # 10
 
 myLinkedList.append(20)
