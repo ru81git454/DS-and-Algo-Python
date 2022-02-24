@@ -3,7 +3,6 @@
 
 # build queues in linkedlist, only need O(1) to change pointer
 # because array has index associated with it, once we remove it, we need to shift the index over, it is O(n).
-from hashlib import new
 
 
 class Node():
